@@ -80,7 +80,7 @@ namespace SCP_575
 				if (Config.EnableKeter)
 					EventHandlers.Coroutines.Add(Timing.RunCoroutine(Keter(blackoutDur), "keter"));
 
-				Generator079.Generators[0].RpcCustomOverchargeForOurBeautifulModCreators(blackoutDur, Config.OnlyHeavy);
+				Generator079.Generators[0].ServerOvercharge(blackoutDur, Config.OnlyHeavy);
 				if (Config.Voice)
 					RespawnEffectsController.PlayCassieAnnouncement("pitch_0.15 .g7", false, false);
 				yield return Timing.WaitForSeconds(blackoutDur - 8.7f);
