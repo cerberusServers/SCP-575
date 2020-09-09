@@ -6,8 +6,8 @@ using MEC;
 using Respawning;
 using UnityEngine;
 using Object = UnityEngine.Object;
-using Random = System.Random;
-using Handlers = Exiled.Events.Handlers;
+using Random = System.Random;using Handlers = Exiled.Events.Handlers;
+
 
 namespace SCP_575
 {
@@ -16,11 +16,11 @@ namespace SCP_575
 		public override string Author { get; } = "Galaxy119";
 		public override string Name { get; } = "SCP-575";
 		public override string Prefix { get; } = "575";
-		public override Version Version { get; } = new Version(3, 5, 0);
-		public override Version RequiredExiledVersion { get; } = new Version(2, 0, 0);
-		
+		public override Version Version { get; } = new Version(3, 5, 1);
+		public override Version RequiredExiledVersion { get; } = new Version(2, 0, 10);
+
 		public Random Gen = new Random();
-		
+
 		public EventHandlers EventHandlers;
 		public static bool TimerOn;
 		public override PluginPriority Priority { get; } = PluginPriority.Default;
@@ -31,7 +31,7 @@ namespace SCP_575
 			{
 				Log.Info("loaded.");
 				Log.Info("Configs loaded.");
-				
+
 				EventHandlers = new EventHandlers(this);
 
 				Handlers.Server.RoundStarted += EventHandlers.OnRoundStart;
@@ -58,22 +58,22 @@ namespace SCP_575
 
 		public override void OnReloaded()
 		{
-			
+
 		}
 
 		public IEnumerator<float> RunBlackoutTimer()
 		{
 			yield return Timing.WaitForSeconds(Config.InitialDelay);
 
-			for (;;)
+			for (; ; )
 			{
-				RespawnEffectsController.PlayCassieAnnouncement("facility power system failure in 3 . 2 . 1 .", false, true);
+				RespawnEffectsController.PlayCassieAnnouncement(Config.CassieMessageStart, false, true);
 
 				if (Config.DisableTeslas)
 					EventHandlers.TeslasDisabled = true;
 				TimerOn = true;
 				yield return Timing.WaitForSeconds(8.7f);
-			
+
 				float blackoutDur = Config.DurationMax;
 				if (Config.RandomEvents)
 					blackoutDur = (float)Gen.NextDouble() * (Config.DurationMax - Config.DurationMin) + Config.DurationMin;
@@ -82,9 +82,9 @@ namespace SCP_575
 
 				Generator079.Generators[0].ServerOvercharge(blackoutDur, Config.OnlyHeavy);
 				if (Config.Voice)
-					RespawnEffectsController.PlayCassieAnnouncement("pitch_0.15 .g7", false, false);
+					RespawnEffectsController.PlayCassieAnnouncement(Config.CassieKeter, false, false);
 				yield return Timing.WaitForSeconds(blackoutDur - 8.7f);
-				RespawnEffectsController.PlayCassieAnnouncement("facility power system now operational", false, true);
+				RespawnEffectsController.PlayCassieAnnouncement(Config.CassieMessageEnd, false, true);
 				yield return Timing.WaitForSeconds(8.7f);
 				Timing.KillCoroutines("keter");
 				EventHandlers.TeslasDisabled = false;
@@ -106,11 +106,11 @@ namespace SCP_575
 					foreach (FlickerableLight light in Object.FindObjectsOfType<FlickerableLight>())
 						if (Vector3.Distance(light.transform.position, player.Position) < 10f && !damaged)
 							if (player.ReferenceHub.characterClassManager.IsHuman() &&
-							    player.Role != RoleType.Spectator && !player.ReferenceHub.HasLightSource())
+								player.Role != RoleType.Spectator && !player.ReferenceHub.HasLightSource())
 							{
 								damaged = true;
-								player.ReferenceHub.playerStats.HurtPlayer(new PlayerStats.HitInfo(Config.KeterDamage, "SCP-575", DamageTypes.Wall, 0), player.GameObject);
-								player.Broadcast(5, "You were damaged by SCP-575! Equip a flashlight!", Broadcast.BroadcastFlags.Normal);
+								player.ReferenceHub.playerStats.HurtPlayer(new PlayerStats.HitInfo(Config.KeterDamage, Config.KilledBy, DamageTypes.Wall, 0), player.GameObject);
+								player.Broadcast(Config.DamageBroadcastDuration, Config.DamageBroadcast, Broadcast.BroadcastFlags.Normal);
 							}
 
 					yield return Timing.WaitForSeconds(5f);
