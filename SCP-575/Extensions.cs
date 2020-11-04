@@ -6,9 +6,9 @@ namespace SCP_575
 		{
 			if (rh.inventory != null && rh.inventory.curItem == ItemType.Flashlight)
 				return true;
-			if (rh.inventory == null || rh.weaponManager == null || !rh.weaponManager.NetworksyncFlash ||
+			/*if (rh.inventory == null || rh.weaponManager == null || !rh.weaponManager.NetworksyncFlash ||
 				rh.weaponManager.curWeapon < 0 ||
-				rh.weaponManager.curWeapon >= rh.weaponManager.weapons.Length) return false;
+				rh.weaponManager.curWeapon >= rh.weaponManager.weapons.Length) return false;*/
 			WeaponManager.Weapon weapon = rh.weaponManager.weapons[rh.weaponManager.curWeapon];
 			Inventory.SyncItemInfo itemInHand = rh.inventory.GetItemInHand();
 			if (weapon == null || itemInHand.modOther < 0 || itemInHand.modOther >= weapon.mod_others.Length)
