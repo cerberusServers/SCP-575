@@ -107,9 +107,9 @@ namespace SCP_575
 					Log.Debug(player);
 
 
-					yield return Timing.WaitForSeconds(5f);
+					yield return Timing.WaitForSeconds(2f);
 				}
-			} while ((dur -= 5f) > 5f);
+			} while ((dur -= 3f) > 3f);
 		}
 	}
 }
