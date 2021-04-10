@@ -16,7 +16,7 @@ namespace SCP_575
 		public override string Author { get; } = "Galaxy119";
 		public override string Name { get; } = "SCP-575";
 		public override string Prefix { get; } = "575";
-		public override Version Version { get; } = new Version(3, 6, 0);
+		public override Version Version { get; } = new Version(3, 6, 1);
 		public override Version RequiredExiledVersion { get; } = new Version(2, 1, 12);
 		
 		public Random Gen = new Random();
