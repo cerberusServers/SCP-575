@@ -6,8 +6,8 @@ using MEC;
 using Respawning;
 using UnityEngine;
 using Object = UnityEngine.Object;
-using Random = System.Random;using Handlers = Exiled.Events.Handlers;
-
+using Random = System.Random;
+using Handlers = Exiled.Events.Handlers;
 
 namespace SCP_575
 {
@@ -16,11 +16,11 @@ namespace SCP_575
 		public override string Author { get; } = "Galaxy119";
 		public override string Name { get; } = "SCP-575";
 		public override string Prefix { get; } = "575";
-		public override Version Version { get; } = new Version(3, 5, 1);
+		public override Version Version { get; } = new Version(3, 6, 0);
 		public override Version RequiredExiledVersion { get; } = new Version(2, 1, 12);
-
+		
 		public Random Gen = new Random();
-
+		
 		public EventHandlers EventHandlers;
 		public static bool TimerOn;
 		public override PluginPriority Priority { get; } = PluginPriority.Default;
@@ -31,7 +31,7 @@ namespace SCP_575
 			{
 				Log.Info("loaded.");
 				Log.Info("Configs loaded.");
-
+				
 				EventHandlers = new EventHandlers(this);
 
 				Handlers.Server.RoundStarted += EventHandlers.OnRoundStart;
@@ -58,14 +58,14 @@ namespace SCP_575
 
 		public override void OnReloaded()
 		{
-
+			
 		}
 
 		public IEnumerator<float> RunBlackoutTimer()
 		{
 			yield return Timing.WaitForSeconds(Config.InitialDelay);
 
-			for (; ; )
+			for (;;)
 			{
 				RespawnEffectsController.PlayCassieAnnouncement(Config.CassieMessageStart, false, true);
 
@@ -73,7 +73,7 @@ namespace SCP_575
 					EventHandlers.TeslasDisabled = true;
 				TimerOn = true;
 				yield return Timing.WaitForSeconds(8.7f);
-
+			
 				float blackoutDur = Config.DurationMax;
 				if (Config.RandomEvents)
 					blackoutDur = (float)Gen.NextDouble() * (Config.DurationMax - Config.DurationMin) + Config.DurationMin;
@@ -102,13 +102,12 @@ namespace SCP_575
 			{
 				foreach (Player player in Player.List)
 				{
-					if(player.CurrentRoom.LightsOff && !player.ReferenceHub.HasLightSource() && player.ReferenceHub.characterClassManager.IsHuman() && player.Side != Side.None)
+					if (player.CurrentRoom.LightsOff && !player.ReferenceHub.HasLightSource() && player.ReferenceHub.characterClassManager.IsHuman())
 						player.Hurt(Config.KeterDamage, DamageTypes.Bleeding, Config.KilledBy);
 
-
-					yield return Timing.WaitForSeconds(2f);
+					yield return Timing.WaitForSeconds(5f);
 				}
-			} while ((dur -= 3f) > 3f);
+			} while ((dur -= 5f) > 5f);
 		}
 	}
 }
