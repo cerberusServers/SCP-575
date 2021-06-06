@@ -102,8 +102,11 @@ namespace SCP_575
 			{
 				foreach (Player player in Player.List)
 				{
-					if (player.CurrentRoom.LightsOff && !player.ReferenceHub.HasLightSource() && player.ReferenceHub.characterClassManager.IsHuman())
+                    if (player.CurrentRoom.LightsOff && !player.ReferenceHub.HasLightSource() && player.ReferenceHub.characterClassManager.IsHuman())
+                    {
 						player.Hurt(Config.KeterDamage, DamageTypes.Bleeding, Config.KilledBy);
+						player.Broadcast(Config.DamageBroadcastDuration, Config.DamageBroadcast);
+					}
 
 					yield return Timing.WaitForSeconds(5f);
 				}
